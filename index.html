@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<title>Generate Unique ID</title>
+	
+	<style>
+		*{
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+		}
+		.container{
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			margin-top: 5%;
+		}
+		.title{
+			color: red;
+			border: 1px solid rgb(216, 216, 216);
+			padding: 10px 12px;
+		}
+		.generate-btn{
+			padding: 10px;
+			outline: none;
+			cursor: pointer;
+			border-radius: 5px;
+			border: none;
+			background-color: cadetblue;
+			font-size: 20px;
+			transition: 0.3s ease;
+			-webkit-transition: 0.3s ease;
+			-o-transition: 0.3s ease;
+			-moz-transition: 0.3s ease;
+			color: #fff;
+			margin: 10px 0;
+		}
+		.generate-btn:hover{
+			background-color: cornflowerblue;
+			-webkit-box-shadow: 3px 3px 20px 0px rgba(0,0,0,0.21);
+			-moz-box-shadow: 3px 3px 20px 0px rgba(0,0,0,0.21);
+			box-shadow: 3px 3px 20px 0px rgba(0,0,0,0.21);
+		}
+		/* help button */
+		.help-btn{
+			border-radius: 50%;
+			background-color: #fff;
+			border: 3px solid #fff;
+			-webkit-box-shadow: 3px 3px 20px 0px rgba(0,0,0,0.21);
+			-moz-box-shadow: 3px 3px 20px 0px rgba(0,0,0,0.21);
+			box-shadow: 3px 3px 20px 0px rgba(0,0,0,0.21);
+			position: fixed;
+			right: 30px;
+			top: 30px;
+			padding: 10px 16px;
+			font-size: 16px;
+			cursor: pointer;
+			outline: none;
+		}
+		.help-modal{
+			width: 400px;
+			height: 300px;
+			background-color: #fff;
+			border-radius: 5px;
+			-webkit-box-shadow: 3px 3px 20px 0px rgba(0,0,0,0.21);
+			-moz-box-shadow: 3px 3px 20px 0px rgba(0,0,0,0.21);
+			box-shadow: 3px 3px 20px 0px rgba(0,0,0,0.21);
+			position: fixed;
+			left: 50%;
+			top: 10%;
+			transform: translateX(-50%) scale(0);
+			z-index: 1000;
+			transition: 0.3s ease;
+			-webkit-transition: 0.3s ease;
+			-o-transition: 0.3s ease;
+			-moz-transition: 0.3s ease;
+			border: 1px solid gray;
+			padding: 10px;
+		}
+		.help-modal.show{
+			transform: translateX(-50%) scale(1);
+		}
+		ul{
+			list-style: none;
+			padding: 0;
+			margin: 0
+		}
+		li{
+			margin-left: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1 class="title">Generate Unique ID</h1>
+		<button class="generate-btn" onclick="generateUniqueId(event);return false;">Generate</button>
+		<h2 id="result">Unique ID : XXXX</h2>
+	</div>
+
+	<div class="help">
+		<button class="help-btn">?</button>
+		<div class="help-modal">
+			<h3 style="margin: 5px 0; color: red">How To Run</h3>
+			<ul>
+				<h4 style="margin: 3px 0">1 . Open Terminal</h4>
+				<li>Mac : Command + Space and type 'terminal'</li>
+				<li>Window : Windows + R and type 'cmd'</li>
+				<h4 style="margin: 3px 0">2 . Start Server</h4>
+				<li>Type : php -S 127.0.0.1:8080 to terminal</li>
+				<li>Copy And Past : http://127.0.0.1:808 to your browser</li>
+			</ul>
+		</div>
+	</div>
+
+	<script>
+		const helpButton = document.querySelector('.help-btn');
+		helpButton.addEventListener('click', function(event){
+			event.stopPropagation();
+			showModal();
+		});
+		window.addEventListener('click', function(event){
+			showModal();
+		});
+		isShowing = false;
+		function showModal(){
+			const helpModal = document.querySelector('.help-modal');
+			isShowing = !isShowing;
+			if(isShowing){
+				helpModal.classList.add('show');
+			}
+			else{
+				helpModal.classList.remove('show');
+			}
+		}
+	</script>
+
+<script>
+
+	let uniqueList = [];
+	function generateUniqueId(event){
+		event.stopPropagation();
+		startGenerate();
+	}
+	function startGenerate(){
+		const generatedUniqueId = Math.random().toString(10).substr(2, 4);
+		const result = document.getElementById('result');
+		result.innerText = 'Unique ID : '+generatedUniqueId;
+
+		//compare to old unique list
+		compareToOldUniqueList(generatedUniqueId);
+	}
+
+	function compareToOldUniqueList(generatedUniqueId){
+		if(uniqueList.length > 0){
+			updateJsonFile(generatedUniqueId);
+		}
+		else{
+			let isUnique = true;
+			uniqueList.forEach(id => {
+				if(parseInt(id['id']) === generatedUniqueId){
+					isUnique = false;
+				}
+			})
+			if(isUnique){
+				updateJsonFile(generatedUniqueId);
+			}
+			else{
+				startGenerate();
+			}
+		}
+	}
+
+	function updateJsonFile(newUniqueId){
+
+		uniqueList.push({id: newUniqueId});
+		console.log(uniqueList);
+
+		var response=document.getElementById("response");
+		var data = 'data='+JSON.stringify(uniqueList);
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange=function(){
+			if (xmlhttp.readyState==4 && xmlhttp.status==200){
+				//where done
+				console.log('Updated');
+			}
+		}
+		xmlhttp.open("POST","save.php",true);
+		//Must add this request header to XMLHttpRequest request for POST
+		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xmlhttp.send(data);
+	}
+
+//get unique id list on start up
+getUniqueIdList();
+
+function getUniqueIdList(){
+	fetch('unique_id_list.json',{
+		method: 'GET',
+		headers:{
+			'Accept': 'application/json',
+			'Content-Type': 'application/json',
+		}
+	}).then(response => response.json())
+	.then(data => {
+		uniqueList = data;
+	}).catch(err => {
+		console.log(err);
+		//create blank json file
+		this.resetJsonFile();
+	})
+}
+
+function resetJsonFile(){
+	var response=document.getElementById("response");
+	var data = 'data=[]';
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange=function(){
+		if (xmlhttp.readyState==4 && xmlhttp.status==200){
+			//where done
+			console.log('Reseted');
+		}
+	}
+	xmlhttp.open("POST","save.php",true);
+	//Must add this request header to XMLHttpRequest request for POST
+	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xmlhttp.send(data);
+
+	//get data again
+	getUniqueIdList();
+}
+</script>
+</body>
+</html>
