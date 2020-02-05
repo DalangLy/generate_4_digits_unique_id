@@ -70,7 +70,7 @@
 			box-shadow: 3px 3px 20px 0px rgba(0,0,0,0.21);
 			position: fixed;
 			left: 50%;
-			top: 10%;
+			top: 10px;
 			transform: translateX(-50%) scale(0);
 			z-index: 1000;
 			transition: 0.3s ease;
@@ -112,6 +112,8 @@
 				<li>Type : php -S 127.0.0.1:8080 to terminal</li>
 				<li>Copy And Past : http://127.0.0.1:808 to your browser</li>
 			</ul>
+			<p style="text-align: center; width: 100%; margin-top: 40px;">This Instruction Work On Local Machine Only</p>
+			<p style="color: green;text-align: center; width: 100%;">Dev, by Dalang Ly</p>
 		</div>
 	</div>
 
@@ -122,7 +124,7 @@
 			showModal();
 		});
 		window.addEventListener('click', function(event){
-			showModal();
+			hideModal();
 		});
 		isShowing = false;
 		function showModal(){
@@ -133,6 +135,13 @@
 			}
 			else{
 				helpModal.classList.remove('show');
+			}
+		}
+		function hideModal(){
+			const helpModal = document.querySelector('.help-modal');
+			if(isShowing){
+				helpModal.classList.remove('show');
+				isShowing = !isShowing;
 			}
 		}
 	</script>
