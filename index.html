@@ -185,7 +185,7 @@
 	function updateJsonFile(newUniqueId){
 
 		uniqueList.push({id: newUniqueId});
-		console.log(uniqueList);
+		//console.log(uniqueList);
 
 		var response=document.getElementById("response");
 		var data = 'data='+JSON.stringify(uniqueList);
@@ -193,7 +193,7 @@
 		xmlhttp.onreadystatechange=function(){
 			if (xmlhttp.readyState==4 && xmlhttp.status==200){
 				//where done
-				console.log('Updated');
+				//console.log('Updated');
 			}
 		}
 		xmlhttp.open("POST","save.php",true);
@@ -229,7 +229,7 @@ function resetJsonFile(){
 	xmlhttp.onreadystatechange=function(){
 		if (xmlhttp.readyState==4 && xmlhttp.status==200){
 			//where done
-			console.log('Reseted');
+			//console.log('Reseted');
 		}
 	}
 	xmlhttp.open("POST","save.php",true);
